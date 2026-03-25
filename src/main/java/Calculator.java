@@ -15,7 +15,7 @@ public class Calculator {
 
         Locale locale = switch (lang) {
             case "2" -> new Locale("fr", "FR");
-            case "3" -> new Locale("fi", "Fi");
+            case "3" -> new Locale("fi", "FI");
             case "4" -> new Locale("ja", "JP");
             default -> new Locale("en", "UK");
         };
