@@ -1,27 +1,26 @@
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import java.io.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CalculatorTest {
+class CalculatorTest {
 
     private final InputStream sysInBackup = System.in;
     private final PrintStream sysOutBackup = System.out;
     private ByteArrayOutputStream outContent;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         System.setIn(sysInBackup);
         System.setOut(sysOutBackup);
     }
 
-    // Helper to run calculator with mocked input
     private String runCalcWithInput(String input) {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Calculator.main(new String[]{});
@@ -29,12 +28,10 @@ public class CalculatorTest {
     }
 
     @Test
-    public void testEnglishLanguageAndSum() {
-        // User selects English (1), wants 2 entries, inputs two pairs (2,3) and (4,5)
-        // total = (2*3) + (4*5) = 6 + 20 = 26
+    void testEnglishLanguageAndSum() {
         String input =
-                "1\n" +   // English
-                        "2\n" +   // number of pairs
+                "1\n" +
+                        "2\n" +
                         "2\n" +
                         "3\n" +
                         "4\n" +
@@ -42,61 +39,41 @@ public class CalculatorTest {
 
         String output = runCalcWithInput(input);
 
-        assertTrue(output.contains("Enter the number of items to purchase:")); // or your English prompt1
-        assertTrue(output.contains("Enter the price for item:"));   // prompt2
-        assertTrue(output.contains("Enter the quantity for item:"));  // prompt3
-        assertTrue(output.contains("Total cost: 26.0"));             // sum + total
+        assertTrue(output.contains("Enter the number of items to purchase:"));
+        assertTrue(output.contains("Enter the price for item:"));
+        assertTrue(output.contains("Enter the quantity for item:"));
+        assertTrue(output.contains("Total cost: 26.0"));
     }
 
     @Test
-    public void testFrenchLanguageSelection() {
-        // Only checking that French prompts appear
-        String input =
-                "2\n" +  // French
-                        "1\n" +
-                        "2\n" +
-                        "3\n";
-
+    void testFrenchLanguageSelection() {
+        String input = "2\n1\n2\n3\n";
         String output = runCalcWithInput(input);
 
-        assertTrue("Should display French prompt1", output.contains("Donne le nombre de produits à acheter:"));
+        assertTrue(output.contains("Donne le nombre de produits à acheter:"));
     }
 
     @Test
-    public void testFinnishLanguageSelection() {
-        String input =
-                "3\n" +
-                        "1\n" +
-                        "2\n" +
-                        "3\n";
-
+    void testFinnishLanguageSelection() {
+        String input = "3\n1\n2\n3\n";
         String output = runCalcWithInput(input);
 
         assertTrue(output.contains("Syötä tuotteen määrä:"));
     }
 
     @Test
-    public void testJapaneseLanguageSelection() {
-        String input =
-                "4\n" +
-                        "1\n" +
-                        "2\n" +
-                        "3\n";
-
+    void testJapaneseLanguageSelection() {
+        String input = "4\n1\n2\n3\n";
         String output = runCalcWithInput(input);
 
         assertTrue(output.contains("数量を入力してください"));
     }
 
     @Test
-    public void testZeroItems() {
-        String input =
-                "1\n" + // English
-                        "0\n";  // 0 items → total should be 0
-
+    void testZeroItems() {
+        String input = "1\n0\n";
         String output = runCalcWithInput(input);
 
         assertTrue(output.contains("Total cost: 0.0"));
     }
 }
-
